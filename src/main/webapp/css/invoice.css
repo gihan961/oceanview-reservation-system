@@ -1,0 +1,123 @@
+/* Invoice-specific Styles */
+
+.invoice-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30px;
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.hotel-info h1 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.hotel-info p {
+    color: var(--text-light);
+    margin: 5px 0;
+}
+
+.invoice-title {
+    text-align: right;
+}
+
+.invoice-title h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.invoice-body {
+    margin-bottom: 30px;
+}
+
+.invoice-section {
+    margin-bottom: 30px;
+}
+
+.invoice-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--light-bg);
+    border-radius: 5px;
+}
+
+.invoice-table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.invoice-table th {
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    padding: 12px;
+    text-align: left;
+}
+
+.invoice-table td {
+    padding: 12px;
+}
+
+.invoice-table tfoot tr {
+    border-top: 2px solid var(--border-color);
+}
+
+.invoice-table .total-row {
+    background-color: var(--light-bg);
+    font-size: 1.2em;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.invoice-footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--light-bg);
+    border-radius: 5px;
+    margin-top: 30px;
+}
+
+.invoice-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+@media print {
+    .header,
+    .footer,
+    .invoice-actions {
+        display: none;
+    }
+    
+    .invoice-container {
+        box-shadow: none;
+        padding: 0;
+    }
+}
