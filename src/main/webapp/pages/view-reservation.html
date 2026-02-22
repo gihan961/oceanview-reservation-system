@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Reservations - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">🌊 OceanView</div>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="add-reservation.html" data-permission="canAddReservations">New Reservation</a>
+                <a href="view-reservation.html" class="active" data-permission="canViewReservations">View Reservations</a>
+                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
+                <a href="manage-rooms.html" data-permission="canManageRooms">Manage Rooms</a>
+                <a href="report.html" data-permission="canViewReports">Reports</a>
+                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
+                <a href="help.html">Help</a>
+            </nav>
+            <div class="user-menu">
+                <span id="username">Loading...</span>
+                <span id="userRole" class="role-badge">Loading...</span>
+                <a href="../index.html" class="logout" onclick="logout(event)">Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>View Reservations</h1>
+                <p class="page-description">Search, filter, and manage all reservations</p>
+            </div>
+
+            <div id="messageArea" class="message-area" style="display: none;"></div>
+
+            <div class="filter-section">
+                <h2>🔍 Search & Filter</h2>
+                <form id="searchForm" class="search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="searchReservationNumber">Reservation Number:</label>
+                            <input type="text" id="searchReservationNumber" name="searchReservationNumber" 
+                                   placeholder="e.g., RES-2026-00123">
+                        </div>
+                        <div class="form-group">
+                            <label for="searchGuestName">Guest Name:</label>
+                            <input type="text" id="searchGuestName" name="searchGuestName" 
+                                   placeholder="Enter guest name">
+                        </div>
+                        <div class="form-group">
+                            <label for="searchRoomId">Room Number:</label>
+                            <input type="text" id="searchRoomId" name="searchRoomId" 
+                                   placeholder="e.g., 101">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="searchCheckInDate">Check-In From:</label>
+                            <input type="date" id="searchCheckInDate" name="searchCheckInDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="searchCheckOutDate">Check-Out Until:</label>
+                            <input type="date" id="searchCheckOutDate" name="searchCheckOutDate">
+                        </div>
+                        <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+                            <button type="submit" class="btn-primary">🔍 Search</button>
+                            <button type="reset" class="btn-secondary" id="resetBtn">↻ Reset</button>
+                            <button type="button" class="btn-secondary" id="refreshBtn">⟳ Refresh</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="reservations-section">
+                <div class="section-header">
+                    <h2>📋 All Reservations</h2>
+                    <div>
+                        <span id="totalCount" class="count-badge">Loading...</span>
+                        <a href="add-reservation.html" class="btn-primary" data-permission="canAddReservations">+ Add New</a>
+                    </div>
+                </div>
+                
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading reservations...</p>
+                </div>
+
+                <div class="table-container">
+                    <table id="reservationsTable" class="reservations-table">
+                        <thead>
+                            <tr>
+                                <th>Reservation #</th>
+                                <th>Guest Name</th>
+                                <th>Contact</th>
+                                <th>Room</th>
+                                <th>Check-In</th>
+                                <th>Check-Out</th>
+                                <th>Nights</th>
+                                <th>Total Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsTableBody">
+                            <tr>
+                                <td colspan="9" class="no-data">Loading reservations...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="paginationControls" style="display: none;">
+                    <button class="btn-page" id="prevPage" disabled>← Previous</button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button class="btn-page" id="nextPage" disabled>Next →</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 OceanView Reservation System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Reservation Details -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>📄 Reservation Details</h2>
+            <div id="reservationDetails" class="reservation-details-content"></div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content modal-small">
+            <h2>⚠️ Confirm Delete</h2>
+            <p>Are you sure you want to delete this reservation?</p>
+            <p class="warning-text">This action cannot be undone!</p>
+            <div class="modal-actions">
+                <button id="confirmDelete" class="btn-danger">Delete</button>
+                <button id="cancelDelete" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js?v=2"></script>
+    <script src="../js/view-reservation.js?v=2"></script>
+</body>
+</html>

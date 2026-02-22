@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Reservation - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">🌊 OceanView</div>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="add-reservation.html" class="active" data-permission="canAddReservations">New Reservation</a>
+                <a href="view-reservation.html" data-permission="canViewReservations">View Reservations</a>
+                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
+                <a href="manage-rooms.html" data-permission="canManageRooms">Manage Rooms</a>
+                <a href="report.html" data-permission="canViewReports">Reports</a>
+                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
+                <a href="help.html">Help</a>
+            </nav>
+            <div class="user-menu">
+                <span id="username">Loading...</span>
+                <span id="userRole" class="role-badge">Loading...</span>
+                <a href="../index.html" class="logout" onclick="logout(event)">Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Add New Reservation</h1>
+                <p class="page-description">Fill in the guest and reservation details below</p>
+            </div>
+
+            <div id="messageArea" class="message-area" style="display: none;"></div>
+            
+            <form id="addReservationForm" class="reservation-form">
+                <div class="form-section">
+                    <h2>Guest Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guestName">Guest Name: <span class="required">*</span></label>
+                            <input type="text" id="guestName" name="guestName" required 
+                                   placeholder="Enter full name" maxlength="100">
+                            <span class="field-error" id="guestNameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactNumber">Phone Number: <span class="required">*</span></label>
+                            <input type="tel" id="contactNumber" name="contactNumber" required 
+                                   placeholder="e.g., +1-555-0123" pattern="[\+]?[0-9\-\s]+" maxlength="20">
+                            <span class="field-error" id="contactNumberError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="address">Address: <span class="required">*</span></label>
+                            <textarea id="address" name="address" required rows="2" 
+                                      placeholder="Enter complete address" maxlength="255"></textarea>
+                            <span class="field-error" id="addressError"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Reservation Details</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkInDate">Check-In Date: <span class="required">*</span></label>
+                            <input type="date" id="checkInDate" name="checkInDate" required>
+                            <span class="field-error" id="checkInDateError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkOutDate">Check-Out Date: <span class="required">*</span></label>
+                            <input type="date" id="checkOutDate" name="checkOutDate" required>
+                            <span class="field-error" id="checkOutDateError"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="roomId">Select Room: <span class="required">*</span></label>
+                            <select id="roomId" name="roomId" required>
+                                <option value="">Loading available rooms...</option>
+                            </select>
+                            <span class="field-help">Only available rooms are shown</span>
+                            <span class="field-error" id="roomIdError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Nights:</label>
+                            <div class="calculated-field">
+                                <span id="totalNights">0</span> nights
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Room Rate:</label>
+                            <div class="calculated-field">
+                                LKR <span id="pricePerNight">0.00</span> per night
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Amount:</label>
+                            <div class="calculated-field total-amount">
+                                LKR <span id="totalAmount">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <span id="submitBtnText">Create Reservation</span>
+                        <span id="submitBtnLoading" style="display: none;">Creating...</span>
+                    </button>
+                    <button type="reset" class="btn-secondary" id="resetBtn">Clear Form</button>
+                    <a href="dashboard.html" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 OceanView Reservation System. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="../js/auth.js?v=2"></script>
+    <script src="../js/add-reservation.js?v=2"></script>
+</body>
+</html>
