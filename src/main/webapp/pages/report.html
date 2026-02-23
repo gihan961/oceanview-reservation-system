@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <style>
+        /* Print Styles for Reports */
+        @media print {
+            /* Hide navigation, buttons, and interactive elements */
+            .header, .nav, .user-menu, .logout,
+            .no-print, .btn-primary, .btn-secondary,
+            .report-filters, button, input[type="submit"] {
+                display: none !important;
+            }
+            
+            /* Full page layout for print */
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .dashboard-container {
+                display: block;
+            }
+            
+            .main-content {
+                margin: 0;
+                padding: 15mm;
+                max-width: 100%;
+            }
+            
+            /* A4 page size */
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+            
+            /* Report title */
+            h1 {
+                font-size: 24pt;
+                margin-bottom: 10mm;
+                border-bottom: 2px solid #000;
+                padding-bottom: 5mm;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            /* Prevent page breaks inside elements */
+            .stat-card, .stats-summary, .table-container table {
+                page-break-inside: avoid;
+            }
+            
+            /* Stats cards in print */
+            .stats-summary {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10mm;
+                margin-bottom: 10mm;
+            }
+            
+            .stat-card {
+                border: 1px solid #000;
+                padding: 5mm;
+                flex: 1;
+                min-width: 40mm;
+            }
+            
+            .stat-card h3 {
+                font-size: 12pt;
+                margin-bottom: 2mm;
+            }
+            
+            .stat-number {
+                font-size: 18pt;
+                font-weight: bold;
+                color: #000;
+            }
+            
+            /* Table styling for print */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 10pt;
+            }
+            
+            table th {
+                background-color: #e0e0e0 !important;
+                color: #000 !important;
+                border: 1px solid #000;
+                padding: 3mm;
+                text-align: left;
+            }
+            
+            table td {
+                border: 1px solid #000;
+                padding: 2mm;
+            }
+            
+            table tr:nth-child(even) {
+                background-color: #f5f5f5;
+            }
+            
+            /* Hide chart (canvas doesn't print well) */
+            .chart-container {
+                display: none;
+            }
+            
+            /* Footer on every page */
+            .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 8pt;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 2mm;
+            }
+            
+            /* Print metadata */
+            .print-metadata {
+                display: block !important;
+                font-size: 9pt;
+                color: #666;
+                margin-bottom: 5mm;
+                padding: 3mm;
+                border: 1px solid #ccc;
+                background-color: #f9f9f9;
+            }
+        }
+        
+        /* Hide print metadata on screen */
+        .print-metadata {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">🌊 OceanView</div>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="add-reservation.html" data-permission="canAddReservations">New Reservation</a>
+                <a href="view-reservation.html" data-permission="canViewReservations">View Reservations</a>
+                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
+                <a href="manage-rooms.html" data-permission="canManageRooms">Manage Rooms</a>
+                <a href="report.html" class="active" data-permission="canViewReports">Reports</a>
+                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
+                <a href="help.html">Help</a>
+            </nav>
+            <div class="user-menu">
+                <span id="username">User</span>
+                <span id="userRole" class="role-badge">ROLE</span>
+                <a href="#" class="logout" onclick="logout(); return false;">Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <h1>Reports & Analytics</h1>
+
+            <div class="report-filters">
+                <h2>Generate Report</h2>
+                <form id="reportForm" class="report-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reportType">Report Type:</label>
+                            <select id="reportType" name="reportType" required>
+                                <option value="">Select Report Type</option>
+                                <option value="reservations">Reservations Summary</option>
+                                <option value="revenue">Revenue Report</option>
+                                <option value="occupancy">Occupancy Report</option>
+                                <option value="guest">Guest Report</option>
+                                <option value="payment">Payment Report</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary" data-requires="canViewReports">📊 Generate Report</button>
+                            <button type="button" onclick="window.print()" class="btn-secondary no-print" data-requires="canPrintReports">🖨️ Print Report</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="report-results" id="reportResults">
+                <!-- Print Metadata (only visible when printing) -->
+                <div class="print-metadata">
+                    <p><strong>Report Generated:</strong> <span id="printDate"></span></p>
+                    <p><strong>Generated By:</strong> <span id="printUser"></span></p>
+                    <p><strong>OceanView Hotel Reservation System</strong></p>
+                </div>
+                
+                <h2>Report Results</h2>
+                
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <h3>Total Reservations</h3>
+                        <p class="stat-number" id="reportTotalReservations">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Revenue</h3>
+                        <p class="stat-number" id="reportTotalRevenue">LKR 0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Occupancy</h3>
+                        <p class="stat-number" id="reportOccupancy">0%</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Cancellation Rate</h3>
+                        <p class="stat-number" id="reportCancellations">0%</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Visual Analytics</h3>
+                    <canvas id="reportChart"></canvas>
+                </div>
+
+                <div class="table-container">
+                    <table id="reportTable">
+                        <thead id="reportTableHead">
+                            <tr>
+                                <th>Date</th>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            <tr>
+                                <td colspan="3" class="no-data">Generate a report to view data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="quick-reports">
+                <h2>Quick Reports</h2>
+                <div class="quick-report-buttons">
+                    <button onclick="generateQuickReport('today')" class="btn-quick" data-requires="canViewReports">Today's Reservations</button>
+                    <button onclick="generateQuickReport('week')" class="btn-quick" data-requires="canViewReports">This Week</button>
+                    <button onclick="generateQuickReport('month')" class="btn-quick" data-requires="canViewReports">This Month</button>
+                    <button onclick="generateQuickReport('year')" class="btn-quick" data-requires="canViewReports">This Year</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 OceanView Reservation System. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="../js/report.js"></script>
+</body>
+</html>

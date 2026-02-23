@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/invoice.css">
+    <script src="../js/auth.js?v=3"></script>
+    <style>
+        /* Print Styles */
+        @media print {
+            /* Hide navigation and buttons */
+            .header, .nav, .user-menu, .logout, 
+            .no-print, .btn-primary, .btn-secondary {
+                display: none !important;
+            }
+            
+            /* Full page layout for print */
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .dashboard-container {
+                display: block;
+            }
+            
+            .main-content {
+                margin: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+            
+            .invoice-container {
+                box-shadow: none;
+                border: 1px solid #000;
+                page-break-after: avoid;
+            }
+            
+            /* A4 page size */
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+            
+            /* Prevent page breaks inside elements */
+            .invoice-section, .invoice-table {
+                page-break-inside: avoid;
+            }
+            
+            /* Print-friendly colors */
+            .invoice-header {
+                background-color: #f0f0f0 !important;
+                color: #000 !important;
+            }
+            
+            .invoice-table th {
+                background-color: #e0e0e0 !important;
+                color: #000 !important;
+            }
+            
+            /* Clear float for print */
+            .invoice-footer::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">🌊 OceanView</div>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="add-reservation.html" data-permission="canAddReservations">New Reservation</a>
+                <a href="view-reservation.html" data-permission="canViewReservations">View Reservations</a>
+                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
+                <a href="manage-rooms.html" data-permission="canManageRooms">Manage Rooms</a>
+                <a href="report.html" data-permission="canViewReports">Reports</a>
+                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
+                <a href="help.html">Help</a>
+            </nav>
+            <div class="user-menu">
+                <span id="username">User</span>
+                <span id="userRole" class="role-badge">ROLE</span>
+                <a href="#" class="logout" onclick="logout(); return false;">Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="invoice-container">
+                <div class="invoice-header">
+                    <div class="hotel-info">
+                        <h1>🌊 OceanView Hotel</h1>
+                        <p>123 Beach Road, Colombo, Sri Lanka</p>
+                        <p>Phone: +94 11 234 5678 | Email: info@oceanview.com</p>
+                    </div>
+                    <div class="invoice-title">
+                        <h2>INVOICE</h2>
+                        <p>Invoice #: <span id="invoiceNumber">INV-0001</span></p>
+                        <p>Date: <span id="invoiceDate">2026-02-24</span></p>
+                    </div>
+                </div>
+
+                <div class="invoice-body">
+                    <div class="invoice-section">
+                        <h3>Guest Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Name:</strong>
+                                <span id="guestName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Address:</strong>
+                                <span id="guestEmail">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Phone:</strong>
+                                <span id="guestPhone">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Reservation No:</strong>
+                                <span id="guestId">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invoice-section">
+                        <h3>Reservation Details</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Reservation ID:</strong>
+                                <span id="reservationId">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Check-In:</strong>
+                                <span id="checkIn">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Check-Out:</strong>
+                                <span id="checkOut">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Room Type:</strong>
+                                <span id="roomType">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Number of Nights:</strong>
+                                <span id="nights">-</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Number of Guests:</strong>
+                                <span id="guests">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invoice-section">
+                        <h3>Charges</h3>
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="chargesBody">
+                                <tr>
+                                    <td>Room Charges</td>
+                                    <td id="roomNights">0</td>
+                                    <td id="roomRate">LKR 0.00</td>
+                                    <td id="roomTotal">LKR 0.00</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                                    <td id="subtotal">LKR 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-right"><strong>Tax (10%):</strong></td>
+                                    <td id="tax">LKR 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-right"><strong>Service Charge (5%):</strong></td>
+                                    <td id="advance">LKR 0.00</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="3" class="text-right"><strong>Total Due:</strong></td>
+                                    <td id="totalDue"><strong>LKR 0.00</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="invoice-section">
+                        <h3>Payment Information</h3>
+                        <p><strong>Payment Method:</strong> <span id="paymentMethod">-</span></p>
+                        <p><strong>Payment Status:</strong> <span id="paymentStatus">Pending</span></p>
+                    </div>
+
+                    <div class="invoice-footer">
+                        <p><em>Thank you for choosing OceanView Resort!</em></p>
+                        <p>For any queries, please contact us at info@oceanview.com</p>
+                    </div>
+                </div>
+
+                <div class="invoice-actions no-print">
+                    <button onclick="window.print()" class="btn-primary" data-requires="canPrintInvoice">🖨️ Print Invoice</button>
+                    <button onclick="downloadPDF()" class="btn-secondary" data-requires="canPrintInvoice">📥 Download PDF</button>
+                    <a href="view-reservation.html" class="btn-cancel">⬅️ Back to Reservations</a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 OceanView Reservation System. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="../js/invoice.js?v=3"></script>
+</body>
+</html>

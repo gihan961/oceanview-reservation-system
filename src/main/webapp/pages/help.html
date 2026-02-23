@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">🌊 OceanView</div>
+            <nav class="nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="add-reservation.html" data-permission="canAddReservations">New Reservation</a>
+                <a href="view-reservation.html" data-permission="canViewReservations">View Reservations</a>
+                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
+                <a href="manage-rooms.html" data-permission="canManageRooms">Manage Rooms</a>
+                <a href="report.html" data-permission="canViewReports">Reports</a>
+                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
+                <a href="help.html" class="active">Help</a>
+            </nav>
+            <div class="user-menu">
+                <span id="username">Loading...</span>
+                <span id="userRole" class="role-badge">Loading...</span>
+                <a href="../index.html" class="logout" onclick="logout(event)">Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>📚 Help & Support</h1>
+                <p class="page-description">Your comprehensive guide to using the OceanView Reservation System</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="help-section quick-links">
+                <h2>🔗 Quick Links</h2>
+                <div class="quick-links-grid">
+                    <a href="#getting-started" class="quick-link-card">
+                        <span class="icon">🚀</span>
+                        <h3>Getting Started</h3>
+                        <p>New to the system? Start here</p>
+                    </a>
+                    <a href="#user-guide" class="quick-link-card">
+                        <span class="icon">📖</span>
+                        <h3>User Guide</h3>
+                        <p>Step-by-step instructions</p>
+                    </a>
+                    <a href="#features" class="quick-link-card">
+                        <span class="icon">⭐</span>
+                        <h3>Features</h3>
+                        <p>Explore all capabilities</p>
+                    </a>
+                    <a href="#faq" class="quick-link-card">
+                        <span class="icon">❓</span>
+                        <h3>FAQs</h3>
+                        <p>Common questions answered</p>
+                    </a>
+                    <a href="#troubleshooting" class="quick-link-card">
+                        <span class="icon">🔧</span>
+                        <h3>Troubleshooting</h3>
+                        <p>Fix common issues</p>
+                    </a>
+                    <a href="#contact" class="quick-link-card">
+                        <span class="icon">📞</span>
+                        <h3>Contact Support</h3>
+                        <p>Get help from our team</p>
+                    </a>
+                </div>
+            </div>
+            <!-- Getting Started -->
+            <div class="help-section" id="getting-started">
+                <h2>🚀 Getting Started</h2>
+                <div class="help-content">
+                    <h3>Welcome to OceanView Reservation System</h3>
+                    <p>The OceanView Reservation System is a comprehensive web application designed to streamline hotel reservation management. Whether you're an Administrator or Receptionist, this system provides powerful tools to manage your operations efficiently.</p>
+                    
+                    <h3>System Overview</h3>
+                    <p>Our system offers the following key capabilities:</p>
+                    <ul class="feature-list">
+                        <li><strong>Reservation Management:</strong> Create, view, search, and delete guest reservations</li>
+                        <li><strong>Room Availability:</strong> Real-time tracking of available rooms</li>
+                        <li><strong>Invoice Generation:</strong> Automatic invoice creation with print functionality</li>
+                        <li><strong>Reporting & Analytics:</strong> Revenue reports and occupancy statistics</li>
+                        <li><strong>Role-Based Access:</strong> Different permissions for Admins and Receptionists</li>
+                        <li><strong>Audit Logging:</strong> Comprehensive logging of all system activities</li>
+                    </ul>
+
+                    <h3>User Roles</h3>
+                    <div class="role-cards">
+                        <div class="role-card">
+                            <h4>👤 Administrator</h4>
+                            <p>Full system access including:</p>
+                            <ul>
+                                <li>Manage all reservations (create, view, edit, delete)</li>
+                                <li>Generate, view, and modify reports</li>
+                                <li>Edit financial totals</li>
+                                <li>Add and delete rooms</li>
+                                <li>Create and manage Staff & Manager accounts</li>
+                            </ul>
+                        </div>
+                        <div class="role-card">
+                            <h4>👤 Manager</h4>
+                            <p>Operational management including:</p>
+                            <ul>
+                                <li>Create, view, and cancel reservations</li>
+                                <li>Generate and view reports</li>
+                                <li>Add and delete rooms</li>
+                                <li>Print invoices</li>
+                                <li>Cannot manage accounts or edit financials</li>
+                            </ul>
+                        </div>
+                        <div class="role-card">
+                            <h4>👤 Staff</h4>
+                            <p>View-only access including:</p>
+                            <ul>
+                                <li>View all reservations and bookings</li>
+                                <li>View available rooms</li>
+                                <li>Print invoices</li>
+                                <li>Cannot add, edit, or delete reservations</li>
+                                <li>Cannot generate reports or manage rooms</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>First Steps</h3>
+                    <ol class="steps-list">
+                        <li><strong>Log In:</strong> Use your username and password provided by your system administrator</li>
+                        <li><strong>Dashboard:</strong> After login, you'll see the dashboard with key statistics</li>
+                        <li><strong>Navigation:</strong> Use the top menu to access different sections</li>
+                        <li><strong>Test Account:</strong> Admin: "admin" / "password123", Manager: "manager" / "password123", Staff: "staff" / "password123"</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- User Guide -->
+            <div class="help-section" id="user-guide">
+                <h2>📖 User Guide</h2>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> How to Create a Reservation
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Step-by-Step Instructions:</strong></p>
+                            <ol class="steps-list">
+                                <li>Click on <strong>"New Reservation"</strong> in the navigation menu</li>
+                                <li>Fill in the <strong>Guest Information</strong>:
+                                    <ul>
+                                        <li>Guest Name (required, min 2 characters)</li>
+                                        <li>Phone Number (required, min 10 characters)</li>
+                                        <li>Complete Address (required)</li>
+                                    </ul>
+                                </li>
+                                <li>Select <strong>Reservation Details</strong>:
+                                    <ul>
+                                        <li>Check-In Date (cannot be in the past)</li>
+                                        <li>Check-Out Date (must be after check-in)</li>
+                                        <li>Room from dropdown (only available rooms shown)</li>
+                                    </ul>
+                                </li>
+                                <li>Review the <strong>Calculated Amounts</strong>:
+                                    <ul>
+                                        <li>Total nights are calculated automatically</li>
+                                        <li>Price per night is shown from selected room</li>
+                                        <li>Total amount is calculated (nights × price)</li>
+                                    </ul>
+                                </li>
+                                <li>Click <strong>"Create Reservation"</strong> to save</li>
+                                <li>Success message appears and redirects to View Reservations</li>
+                            </ol>
+                            <p class="help-tip"><strong>💡 Tip:</strong> If no rooms are available, the system will display a warning message. You can use the "Clear Form" button to reset all fields at any time.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> How to View and Search Reservations
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Viewing All Reservations:</strong></p>
+                            <ol class="steps-list">
+                                <li>Navigate to <strong>"View Reservations"</strong> page</li>
+                                <li>All reservations are displayed in a table format</li>
+                                <li>Each row shows: Reservation #, Guest Name, Contact, Room, Dates, Amount</li>
+                                <li>Use pagination buttons at the bottom for large datasets (10 per page)</li>
+                            </ol>
+                            
+                            <p><strong>Searching Reservations:</strong></p>
+                            <ul class="feature-list">
+                                <li><strong>By Reservation Number:</strong> Enter full or partial reservation number</li>
+                                <li><strong>By Guest Name:</strong> Search is case-insensitive, matches partial names</li>
+                                <li><strong>By Room Number:</strong> Enter exact room number</li>
+                                <li><strong>By Check-In Date:</strong> Find reservations from a specific date</li>
+                                <li><strong>By Check-Out Date:</strong> Find reservations until a specific date</li>
+                                <li><strong>Multiple Filters:</strong> All criteria work together (AND logic)</li>
+                            </ul>
+                            
+                            <p><strong>Action Buttons:</strong></p>
+                            <ul class="feature-list">
+                                <li><strong>👁️ View Details:</strong> Opens modal with complete reservation information</li>
+                                <li><strong>🧾 View Invoice:</strong> Navigates to printable invoice page</li>
+                                <li><strong>🗑️ Delete:</strong> Opens confirmation modal (Admin only)</li>
+                            </ul>
+                            
+                            <p class="help-tip"><strong>💡 Tip:</strong> Click "Reset" to clear all filters and "Refresh" to reload data from the server.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> Generating Reports
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Steps to Generate Reports:</strong></p>
+                            <ol class="steps-list">
+                                <li>Go to the <strong>"Reports"</strong> page (Admin only)</li>
+                                <li>Select the <strong>Start Date</strong> and <strong>End Date</strong> for the report period</li>
+                                <li>Click <strong>"Generate Report"</strong> button</li>
+                                <li>The system displays:
+                                    <ul>
+                                        <li>Total Revenue for the period</li>
+                                        <li>Number of Reservations</li>
+                                        <li>Average Daily Rate (ADR)</li>
+                                        <li>Occupancy statistics</li>
+                                    </ul>
+                                </li>
+                                <li>Use <strong>"Print Report"</strong> button to print or save as PDF</li>
+                            </ol>
+                            <p class="help-tip"><strong>💡 Tip:</strong> Reports are formatted for A4 printing with @media print CSS. Headers and navigation are hidden when printing.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> Managing Invoices
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Accessing Invoices:</strong></p>
+                            <ol class="steps-list">
+                                <li>From <strong>View Reservations</strong> page, click the <strong>🧾 invoice icon</strong></li>
+                                <li>Or navigate directly to <strong>Invoice</strong> page and enter reservation ID</li>
+                                <li>Invoice displays complete billing information including:
+                                    <ul>
+                                        <li>Guest details and contact information</li>
+                                        <li>Reservation dates and room details</li>
+                                        <li>Itemized charges (room rate × nights)</li>
+                                        <li>Total amount due</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            
+                            <p><strong>Printing Invoices:</strong></p>
+                            <ul class="feature-list">
+                                <li>Click <strong>"Print Invoice"</strong> button at top right</li>
+                                <li>Browser print dialog opens automatically</li>
+                                <li>Invoice is formatted for A4 paper</li>
+                                <li>Print buttons and navigation are hidden in print version</li>
+                                <li>Can save as PDF using "Save as PDF" option</li>
+                            </ul>
+                            
+                            <p class="help-tip"><strong>💡 Tip:</strong> Invoices include company branding and contact information at the bottom.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> Using the Dashboard
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Dashboard Overview:</strong></p>
+                            <p>The dashboard provides an at-a-glance view of your hotel operations:</p>
+                            
+                            <ul class="feature-list">
+                                <li><strong>Statistics Cards:</strong>
+                                    <ul>
+                                        <li>Total Reservations count</li>
+                                        <li>Active Reservations (checked-in guests)</li>
+                                        <li>Total Revenue (current period)</li>
+                                        <li>Current Occupancy Rate</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Recent Check-Ins:</strong> Table showing today's check-ins</li>
+                                <li><strong>Quick Actions:</strong> Role-based shortcuts to common tasks</li>
+                                <li><strong>Occupancy Chart:</strong> Visual representation of room availability</li>
+                            </ul>
+                            
+                            <p class="help-tip"><strong>💡 Tip:</strong> Dashboard automatically updates when you navigate back from other pages.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>➤</span> Deleting Reservations (Admin Only)
+                        </h3>
+                        <div class="accordion-content">
+                            <p><strong>Steps to Delete:</strong></p>
+                            <ol class="steps-list">
+                                <li>Go to <strong>View Reservations</strong> page</li>
+                                <li>Find the reservation you want to delete</li>
+                                <li>Click the <strong>🗑️ delete icon</strong> (visible to Admins only)</li>
+                                <li>A confirmation modal appears with warning message</li>
+                                <li>Click <strong>"Delete"</strong> to confirm or <strong>"Cancel"</strong> to abort</li>
+                                <li>Success message appears and table reloads automatically</li>
+                            </ol>
+                            
+                            <p class="warning-box">
+                                <strong>⚠️ Warning:</strong> Deleting a reservation is permanent and cannot be undone. Make sure you have the correct reservation before confirming deletion.
+                            </p>
+                            
+                            <p class="help-tip"><strong>💡 Tip:</strong> Only users with Administrator role can delete reservations. Receptionists will not see the delete button.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="help-section" id="features">
+                <h2>⭐ Features</h2>
+                
+                <div class="feature-category">
+                    <h3>🏨 Reservation Management</h3>
+                    <ul class="feature-list">
+                        <li><strong>Create Reservations:</strong> Easy-to-use form with real-time validation</li>
+                        <li><strong>View All Reservations:</strong> Paginated table view with 10 items per page</li>
+                        <li><strong>Search & Filter:</strong> Multiple search criteria (name, room, dates, ID)</li>
+                        <li><strong>Reservation Details:</strong> Complete guest and booking information in modal</li>
+                        <li><strong>Delete Reservations:</strong> Admin-only with confirmation modal</li>
+                        <li><strong>Automatic Calculations:</strong> Total nights and amounts calculated in real-time</li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>🛏️ Room Management</h3>
+                    <ul class="feature-list">
+                        <li><strong>Real-Time Availability:</strong> Only available rooms shown in dropdowns</li>
+                        <li><strong>Room Details:</strong> View room number, type, and price per night</li>
+                        <li><strong>Occupancy Tracking:</strong> System tracks which rooms are occupied</li>
+                        <li><strong>Smart Selection:</strong> Prevents double-booking automatically</li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>🧾 Invoice System</h3>
+                    <ul class="feature-list">
+                        <li><strong>Automatic Generation:</strong> Invoices created for all reservations</li>
+                        <li><strong>Professional Format:</strong> Company branding and complete billing details</li>
+                        <li><strong>Print Optimization:</strong> A4-formatted with @media print CSS</li>
+                        <li><strong>Direct Access:</strong> Quick invoice links from View Reservations page</li>
+                        <li><strong>Itemized Billing:</strong> Clear breakdown of charges and totals</li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>📊 Reporting & Analytics</h3>
+                    <ul class="feature-list">
+                        <li><strong>Revenue Reports:</strong> Total revenue for any date range</li>
+                        <li><strong>Reservation Statistics:</strong> Count and analysis of bookings</li>
+                        <li><strong>Occupancy Rates:</strong> Current and historical occupancy data</li>
+                        <li><strong>Average Daily Rate (ADR):</strong> Pricing analytics</li>
+                        <li><strong>Printable Reports:</strong> Professional format for stakeholders</li>
+                        <li><strong>Admin Only:</strong> Restricted to authorized personnel</li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>🔐 Security & Access Control</h3>
+                    <ul class="feature-list">
+                        <li><strong>Role-Based Access Control (RBAC):</strong> Two user roles with different permissions</li>
+                        <li><strong>Session Management:</strong> Secure authentication and automatic timeout</li>
+                        <li><strong>Permission Enforcement:</strong> Both frontend and backend validation</li>
+                        <li><strong>Secure Logout:</strong> Proper session termination</li>
+                        <li><strong>Admin Privileges:</strong>
+                            <ul>
+                                <li>Full access to all features</li>
+                                <li>View and print reports</li>
+                                <li>Delete reservations</li>
+                                <li>Access dashboard analytics</li>
+                            </ul>
+                        </li>
+                        <li><strong>Receptionist Privileges:</strong>
+                            <ul>
+                                <li>Create new reservations</li>
+                                <li>View and search reservations</li>
+                                <li>Print invoices</li>
+                                <li>Cannot delete or view reports</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>📝 Audit & Logging</h3>
+                    <ul class="feature-list">
+                        <li><strong>Activity Logging:</strong> All user actions are logged</li>
+                        <li><strong>Error Tracking:</strong> System errors captured for debugging</li>
+                        <li><strong>Security Events:</strong> Login attempts and access violations logged</li>
+                        <li><strong>Database Operations:</strong> All CRUD operations tracked</li>
+                        <li><strong>Performance Monitoring:</strong> Method execution times recorded</li>
+                    </ul>
+                </div>
+
+                <div class="feature-category">
+                    <h3>🎨 User Interface</h3>
+                    <ul class="feature-list">
+                        <li><strong>Responsive Design:</strong> Works on desktop, tablet, and mobile</li>
+                        <li><strong>Modern UI:</strong> Clean and intuitive interface</li>
+                        <li><strong>Loading States:</strong> Visual feedback during operations</li>
+                        <li><strong>Modal Windows:</strong> Non-intrusive popups for details and confirmations</li>
+                        <li><strong>Form Validation:</strong> Real-time feedback on input errors</li>
+                        <li><strong>Success/Error Messages:</strong> Clear notifications for all actions</li>
+                        <li><strong>Role Badge Display:</strong> Current role shown in header</li>
+                        <li><strong>Print-Optimized:</strong> Clean layouts for invoices and reports</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="help-section" id="faq">
+                <h2>❓ Frequently Asked Questions</h2>
+                <div class="faq">
+                    <div class="faq-item">
+                        <h3>Q: How do I log in to the system?</h3>
+                        <p>A: Use your assigned username and password on the login page. Test accounts are: <strong>admin/admin123</strong> for Administrator and <strong>receptionist/recep123</strong> for Receptionist role.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: What if I forget my password?</h3>
+                        <p>A: Contact your system administrator to reset your password. Currently, self-service password reset is not available.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Why can't I see the Reports or Delete buttons?</h3>
+                        <p>A: These features are restricted to Administrator role. If you're logged in as Receptionist, you won't have access to these functions. Check the role badge in the header to confirm your role.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Can I edit a reservation after it's created?</h3>
+                        <p>A: Currently, the system doesn't support direct editing. To modify a reservation, delete the old one (Admin only) and create a new reservation with the updated information.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: How do I cancel a reservation?</h3>
+                        <p>A: Only Administrators can delete/cancel reservations. Go to "View Reservations", find the reservation, and click the 🗑️ delete icon. Confirm the deletion in the modal that appears.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Where can I view the current occupancy rate?</h3>
+                        <p>A: The occupancy rate is displayed on the Dashboard and can be included in Reports. Only Administrators have access to the Reports page.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: What if no rooms are available for my selected dates?</h3>
+                        <p>A: The system will display "No rooms available" in the room dropdown. Try selecting different dates or check if existing reservations can be modified.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: How is the total amount calculated?</h3>
+                        <p>A: Total amount = Number of nights × Room price per night. The system calculates nights automatically based on check-in and check-out dates.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Can I print invoices and reports?</h3>
+                        <p>A: Yes! Click the "Print Invoice" button on the invoice page or "Print Report" button on the reports page. These are optimized for A4 printing and can be saved as PDF.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: What browsers are supported?</h3>
+                        <p>A: The system works best on the latest versions of Chrome, Firefox, Safari, and Microsoft Edge. Internet Explorer is not supported.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Why did I get logged out automatically?</h3>
+                        <p>A: For security, the system has a session timeout. If you're inactive for an extended period, you'll be automatically logged out and redirected to the login page.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: Can I use the system on mobile devices?</h3>
+                        <p>A: Yes, the interface is responsive and works on tablets and smartphones, though the experience is optimized for desktop use.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: What date format should I use?</h3>
+                        <p>A: The system uses your browser's default date format. Date pickers are provided for easy selection. Make sure check-out date is after check-in date.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Q: How do I search for a specific reservation?</h3>
+                        <p>A: Go to "View Reservations" and use any combination of filters: Reservation ID, Guest Name, Room Number, Check-In Date, or Check-Out Date. All searches are case-insensitive.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="help-section" id="troubleshooting">
+                <h2>🔧 Troubleshooting</h2>
+                
+                <div class="troubleshooting-item">
+                    <h3>🚫 Problem: Cannot log in</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Verify your username and password (case-sensitive)</li>
+                        <li>Try test credentials: admin/admin123 or receptionist/recep123</li>
+                        <li>Clear your browser cache and cookies</li>
+                        <li>Make sure cookies and JavaScript are enabled</li>
+                        <li>Contact your administrator if problem persists</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>🔄 Problem: Reservations not loading</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Click the "Refresh" button on the page</li>
+                        <li>Check your internet connection</li>
+                        <li>Verify you're logged in (check session hasn't expired)</li>
+                        <li>Clear any active filters that might be hiding results</li>
+                        <li>Try logging out and logging back in</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>⚠️ Problem: "Permission Denied" error</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Check your role badge in the header (Admin vs Receptionist)</li>
+                        <li>Verify you have permission for that action (see User Roles section)</li>
+                        <li>Reports and Delete functions are Admin-only</li>
+                        <li>Try logging out and back in to refresh permissions</li>
+                        <li>Contact administrator if you need elevated access</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>🖨️ Problem: Invoice or Report won't print</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Make sure popups are allowed in your browser</li>
+                        <li>Check your printer settings and connection</li>
+                        <li>Try using "Save as PDF" option instead</li>
+                        <li>Verify the page has fully loaded before printing</li>
+                        <li>Use Print Preview to check formatting first</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>📝 Problem: Form validation errors</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Read error messages carefully - they indicate what's wrong</li>
+                        <li>Ensure all required fields (marked with *) are filled</li>
+                        <li>Check date logic: check-out must be after check-in</li>
+                        <li>Phone numbers must be at least 10 characters</li>
+                        <li>Guest name must be at least 2 characters</li>
+                        <li>Make sure a room is selected from the dropdown</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>🗑️ Problem: Delete button not visible</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Verify you're logged in as Administrator (check role badge)</li>
+                        <li>Delete function is not available to Receptionist role</li>
+                        <li>Log out and log back in with admin credentials</li>
+                        <li>Contact your administrator if you need deletion permissions</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>🔄 Problem: Dashboard not updating</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>Navigate away and back to refresh dashboard data</li>
+                        <li>Press F5 or Ctrl+R to refresh the page</li>
+                        <li>Clear browser cache if data seems stale</li>
+                        <li>Check that you have active internet connection</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-item">
+                    <h3>⏰ Problem: Getting logged out frequently</h3>
+                    <p><strong>Solutions:</strong></p>
+                    <ul class="feature-list">
+                        <li>This is normal security behavior after inactivity</li>
+                        <li>Perform an action periodically to keep session active</li>
+                        <li>Save your work frequently</li>
+                        <li>Don't leave the page open without interaction</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="help-section" id="contact">
+                <h2>📞 Contact Support</h2>
+                <div class="contact-info">
+                    <p>If you need additional assistance or encounter issues not covered in this guide, our support team is here to help:</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <h3>📧 Email Support</h3>
+                            <p><strong>Email:</strong> <a href="mailto:support@oceanview.com">support@oceanview.com</a></p>
+                            <p>Response time: Within 24 hours</p>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <h3>📱 Phone Support</h3>
+                            <p><strong>Phone:</strong> (555) 123-4567</p>
+                            <p><strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM EST</p>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <h3>🆘 Emergency Support</h3>
+                            <p><strong>After Hours:</strong> (555) 123-9999</p>
+                            <p>For critical system issues only</p>
+                        </div>
+                    </div>
+                    
+                    <div class="support-tips">
+                        <h3>Before Contacting Support:</h3>
+                        <ul class="feature-list">
+                            <li>Check the FAQ and Troubleshooting sections above</li>
+                            <li>Note any error messages you received</li>
+                            <li>Record the steps that led to the issue</li>
+                            <li>Have your username and role ready (don't share passwords)</li>
+                            <li>Take screenshots if possible to help explain the issue</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>ℹ️ System Information</h2>
+                <div class="system-info">
+                    <div class="info-section">
+                        <h3>Version Information</h3>
+                        <p><strong>Version:</strong> 1.0.0</p>
+                        <p><strong>Last Updated:</strong> February 2026</p>
+                        <p><strong>Build:</strong> Production Release</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Browser Compatibility</h3>
+                        <p><strong>Recommended Browsers:</strong></p>
+                        <ul class="feature-list">
+                            <li>Google Chrome (version 90+)</li>
+                            <li>Mozilla Firefox (version 88+)</li>
+                            <li>Apple Safari (version 14+)</li>
+                            <li>Microsoft Edge (version 90+)</li>
+                        </ul>
+                        <p class="warning-box"><strong>Note:</strong> Internet Explorer is not supported</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>System Requirements</h3>
+                        <ul class="feature-list">
+                            <li><strong>Display:</strong> Minimum 1024x768 resolution (1920x1080 recommended)</li>
+                            <li><strong>JavaScript:</strong> Must be enabled</li>
+                            <li><strong>Cookies:</strong> Must be enabled for authentication</li>
+                            <li><strong>Connection:</strong> Stable internet connection required</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Technologies Used</h3>
+                        <ul class="feature-list">
+                            <li><strong>Backend:</strong> Java 17, Jakarta EE, Servlets</li>
+                            <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (ES6+)</li>
+                            <li><strong>Database:</strong> MySQL 8.0</li>
+                            <li><strong>Build Tool:</strong> Maven 3.11.0</li>
+                            <li><strong>Architecture:</strong> MVC Pattern with multiple design patterns</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 OceanView Reservation System. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="../js/help.js"></script>
+</body>
+</html>
