@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - OceanView Reservation System</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <div class="login-page">
+        <!-- Left Side - Branding -->
+        <div class="login-left">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="55" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="2"/>
+                        <path d="M 30 60 Q 45 50, 60 60 T 90 60" stroke="white" stroke-width="3" fill="none"/>
+                        <path d="M 30 70 Q 45 60, 60 70 T 90 70" stroke="white" stroke-width="3" fill="none"/>
+                        <path d="M 30 80 Q 45 70, 60 80 T 90 80" stroke="white" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <h1>OceanView Hotel</h1>
+                <p class="brand-tagline">Join our team and deliver exceptional service</p>
+                <div class="brand-features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Secure Account Creation</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Role-Based Access Control</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Instant Dashboard Access</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Registration Form -->
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2>Create Account</h2>
+                    <p>Sign up to access the management dashboard</p>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="alert alert-error" style="display: none;">
+                    <span id="errorText">Error message here</span>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successMessage" class="alert alert-success" style="display: none;">
+                    <span id="successText">Success message here</span>
+                </div>
+
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                            <input type="text" id="username" name="username" placeholder="Choose a username" required minlength="3">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <input type="password" id="password" name="password" placeholder="Create a password" required minlength="6">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required minlength="6">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                            </svg>
+                            <select id="role" name="role" required style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px; background: #f7fafc; cursor: pointer;">
+                                <option value="">Select your role</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="STAFF">Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="btnRegister">
+                        <span id="btnText">Create Account</span>
+                        <div class="btn-loader" id="btnLoader" style="display: none;">
+                            <svg class="spinner" width="20" height="20" viewBox="0 0 50 50">
+                                <circle cx="25" cy="25" r="20" fill="none" stroke="white" stroke-width="4"></circle>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    Already have an account? <a href="login.html" class="register-link">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/register.js"></script>
+</body>
+</html>
