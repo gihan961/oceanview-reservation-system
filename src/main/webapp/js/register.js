@@ -1,11 +1,6 @@
-/**
- * Registration Form Handler
- * Handles user registration with client-side validation
- */
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Register page loaded');
-    
+
     const registerForm = document.getElementById('registerForm');
     const btnRegister = document.getElementById('btnRegister');
     const btnText = document.getElementById('btnText');
@@ -15,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.getElementById('successMessage');
     const successText = document.getElementById('successText');
 
-    // Form fields
     const fullNameInput = document.getElementById('fullName');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
@@ -26,31 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Register form not found!');
         return;
     }
-    
+
     console.log('Register form found, attaching submit handler');
 
     registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         console.log('Registration form submitted');
 
-        // Hide previous messages
         hideMessages();
 
-        // Get form values
         const fullName = fullNameInput.value.trim();
         const username = usernameInput.value.trim();
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         const role = roleSelect.value;
-        
+
         console.log('Form values:', { fullName, username, role, passwordLength: password.length });
 
-        // Client-side validation
         if (!validateForm(fullName, username, password, confirmPassword, role)) {
             return;
         }
 
-        // Show loading state
         setLoading(true);
 
         try {
@@ -78,8 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok && data.success) {
                 showSuccess(data.message || 'Registration successful! Redirecting to login...');
                 console.log('Registration successful, redirecting to login...');
-                
-                // Redirect to login page after 2 seconds
+
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 2000);
@@ -94,17 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    /**
-     * Validate form fields
-     */
     function validateForm(fullName, username, password, confirmPassword, role) {
-        // Full name validation
+
         if (fullName.length < 2) {
             showError('Full name must be at least 2 characters long');
             return false;
         }
 
-        // Username validation
         if (username.length < 3) {
             showError('Username must be at least 3 characters long');
             return false;
@@ -115,19 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        // Password validation
         if (password.length < 6) {
             showError('Password must be at least 6 characters long');
             return false;
         }
 
-        // Password match validation
         if (password !== confirmPassword) {
             showError('Passwords do not match');
             return false;
         }
 
-        // Role validation
         if (!role || (role !== 'MANAGER' && role !== 'STAFF')) {
             showError('Please select a valid role');
             return false;
@@ -136,9 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    /**
-     * Show error message
-     */
     function showError(message) {
         console.error('Showing error:', message);
         if (errorText) errorText.textContent = message;
@@ -146,9 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (successMessage) successMessage.style.display = 'none';
     }
 
-    /**
-     * Show success message
-     */
     function showSuccess(message) {
         console.log('Showing success:', message);
         if (successText) successText.textContent = message;
@@ -156,17 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errorMessage) errorMessage.style.display = 'none';
     }
 
-    /**
-     * Hide all messages
-     */
     function hideMessages() {
         if (errorMessage) errorMessage.style.display = 'none';
         if (successMessage) successMessage.style.display = 'none';
     }
 
-    /**
-     * Set loading state
-     */
     function setLoading(isLoading) {
         if (isLoading) {
             if (btnRegister) btnRegister.disabled = true;
@@ -179,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Real-time password match validation
     confirmPasswordInput.addEventListener('input', function() {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
@@ -191,10 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Real-time username validation
     usernameInput.addEventListener('input', function() {
         const username = usernameInput.value;
-        
+
         if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
             usernameInput.setCustomValidity('Only letters, numbers, and underscores allowed');
         } else {

@@ -1,6 +1,3 @@
-/**
- * Manage Rooms — Admin / Manager room CRUD
- */
 let currentAuth = null;
 let allRooms = [];
 let deleteRoomId = null;
@@ -9,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentAuth = await initializePageAuth();
     if (!currentAuth) return;
 
-    // Check permission
     if (!hasPermission(currentAuth.role, 'canManageRooms')) {
         alert('Access Denied: You do not have permission to manage rooms.');
         window.location.href = 'dashboard.html';
@@ -19,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadRooms();
 });
 
-// ── Load all rooms ──────────────────────────────────────────
 async function loadRooms() {
     try {
         const res = await fetch('../api/rooms', { credentials: 'include' });
@@ -64,7 +59,6 @@ function renderTable(rooms) {
     `).join('');
 }
 
-// ── Add / Edit Modal ────────────────────────────────────────
 function openAddModal() {
     document.getElementById('modalTitle').textContent = 'Add New Room';
     document.getElementById('btnSubmitRoom').textContent = 'Add Room';
@@ -111,11 +105,11 @@ async function handleRoomSubmit(e) {
     try {
         let url, method;
         if (id) {
-            // Edit
+
             url = `../api/rooms/${id}`;
             method = 'PUT';
         } else {
-            // Add
+
             url = '../api/rooms';
             method = 'POST';
         }
@@ -141,7 +135,6 @@ async function handleRoomSubmit(e) {
     }
 }
 
-// ── Delete Modal ────────────────────────────────────────────
 function openDeleteModal(id) {
     deleteRoomId = id;
     const room = allRooms.find(r => r.id === id);
@@ -177,14 +170,12 @@ async function confirmDelete() {
     }
 }
 
-// ── Alerts ──────────────────────────────────────────────────
 function showAlert(message, type) {
     const area = document.getElementById('alertArea');
     area.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}">${message}</div>`;
     setTimeout(() => { area.innerHTML = ''; }, 5000);
 }
 
-// Close modals on outside click
 window.addEventListener('click', (e) => {
     if (e.target === document.getElementById('roomModal')) closeModal();
     if (e.target === document.getElementById('deleteModal')) closeDeleteModal();

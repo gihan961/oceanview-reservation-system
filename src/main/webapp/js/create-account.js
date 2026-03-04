@@ -1,13 +1,9 @@
-/**
- * Create Account — Admin-only user registration
- */
 let currentAuth = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     currentAuth = await initializePageAuth();
     if (!currentAuth) return;
 
-    // Only Admin can access
     if (!hasPermission(currentAuth.role, 'canManageAccounts')) {
         alert('Access Denied: You do not have permission to manage accounts.');
         window.location.href = 'dashboard.html';
@@ -17,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadUsers();
 });
 
-// ── Load existing users ─────────────────────────────────────
 async function loadUsers() {
     try {
         const res = await fetch('../api/register', { credentials: 'include' });
@@ -46,7 +41,6 @@ function renderUsers(users) {
     `).join('');
 }
 
-// ── Create Account Form ─────────────────────────────────────
 async function handleCreateAccount(e) {
     e.preventDefault();
 
@@ -56,7 +50,6 @@ async function handleCreateAccount(e) {
     const confirmPassword = document.getElementById('confirmPassword').value;
     const role = document.getElementById('accountRole').value;
 
-    // Validation
     if (!fullName || !username || !password || !confirmPassword || !role) {
         showAlert('Please fill in all fields.', 'error');
         return;
@@ -93,7 +86,7 @@ async function handleCreateAccount(e) {
         if (res.ok && data.success) {
             showAlert(`Account created successfully! Username: ${data.username}, Role: ${data.role}`, 'success');
             document.getElementById('createAccountForm').reset();
-            loadUsers(); // Refresh list
+            loadUsers();
         } else {
             showAlert(data.message || 'Failed to create account.', 'error');
         }
@@ -106,7 +99,6 @@ async function handleCreateAccount(e) {
     }
 }
 
-// ── Alerts ──────────────────────────────────────────────────
 function showAlert(message, type) {
     const area = document.getElementById('alertArea');
     area.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}">${message}</div>`;

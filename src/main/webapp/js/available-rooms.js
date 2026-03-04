@@ -1,19 +1,14 @@
-// Available Rooms Page JavaScript
 let currentAuth = null;
-let allRooms = []; // Store all rooms for filtering
+let allRooms = [];
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Initialize authentication
+
     currentAuth = await initializePageAuth();
     if (!currentAuth) return;
 
-    // Load room availability data
     await loadRoomAvailability();
 });
 
-/**
- * Fetch room availability from the API
- */
 async function loadRoomAvailability() {
     const tbody = document.getElementById('roomTableBody');
     tbody.innerHTML = '<tr><td colspan="7" class="loading-spinner">⏳ Loading room data...</td></tr>';
@@ -41,15 +36,12 @@ async function loadRoomAvailability() {
             return;
         }
 
-        // Store rooms for filtering
         allRooms = data.rooms || [];
 
-        // Update summary cards
         document.getElementById('totalRooms').textContent = data.totalRooms || 0;
         document.getElementById('availableCount').textContent = data.availableRooms || 0;
         document.getElementById('occupiedCount').textContent = data.occupiedRooms || 0;
 
-        // Render the table
         renderRoomTable(allRooms);
 
         console.log('Room availability loaded:', allRooms.length, 'rooms');
@@ -60,9 +52,6 @@ async function loadRoomAvailability() {
     }
 }
 
-/**
- * Render the room table with given data
- */
 function renderRoomTable(rooms) {
     const tbody = document.getElementById('roomTableBody');
 
@@ -71,7 +60,6 @@ function renderRoomTable(rooms) {
         return;
     }
 
-    // Check if user can add reservations (Admin/Manager only, not Staff)
     const canBook = currentAuth && currentAuth.role && hasPermission(currentAuth.role, 'canAddReservations');
 
     let html = '';
@@ -100,16 +88,10 @@ function renderRoomTable(rooms) {
     tbody.innerHTML = html;
 }
 
-/**
- * Redirect to New Reservation page with pre-selected room
- */
 function bookRoom(roomId) {
     window.location.href = 'add-reservation.html?roomId=' + roomId;
 }
 
-/**
- * Filter rooms based on dropdown selection
- */
 function filterRooms() {
     const filter = document.getElementById('statusFilter').value;
 
@@ -125,9 +107,6 @@ function filterRooms() {
     renderRoomTable(filtered);
 }
 
-/**
- * Format a date string
- */
 function formatDate(dateStr) {
     if (!dateStr) return '-';
     try {
@@ -142,9 +121,6 @@ function formatDate(dateStr) {
     }
 }
 
-/**
- * Format number with commas
- */
 function formatNumber(num) {
     return parseFloat(num).toLocaleString('en-LK', {
         minimumFractionDigits: 2,
@@ -152,9 +128,6 @@ function formatNumber(num) {
     });
 }
 
-/**
- * Escape HTML to prevent XSS
- */
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');

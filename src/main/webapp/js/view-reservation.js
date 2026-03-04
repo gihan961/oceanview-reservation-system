@@ -1,29 +1,24 @@
-// View Reservation Page JavaScript
-// Handles reservation listing, search, filter, view details, and delete operations
-
 let allReservations = [];
 let filteredReservations = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 let reservationToDelete = null;
-let userRole = null; // Store user role globally
+let userRole = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('View Reservation page loading...');
-    
-    // Check authentication and permissions
+
     try {
         const auth = await initializePageAuth();
         if (!auth) {
             console.log('Not authenticated, redirecting to login');
-            return; // initializePageAuth already redirects
+            return;
         }
 
         console.log('Auth successful, role:', auth.role);
 
-        // Store user role globally
         userRole = auth.role;
-        
+
         if (!hasPermission(auth.role, 'canViewReservations')) {
             showError('You do not have permission to view reservations.');
             document.querySelector('.reservations-section').style.display = 'none';
@@ -38,18 +33,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-/**
- * Initialize the page
- */
 function initializePage() {
     console.log('initializePage() called');
-    
-    // Load all reservations FIRST (most important)
+
     loadReservations();
-    
-    // Set up event listeners with error handling
+
     try {
-        // Search form handler
+
         const searchForm = document.getElementById('searchForm');
         if (searchForm) {
             searchForm.addEventListener('submit', function(e) {
@@ -57,8 +47,7 @@ function initializePage() {
                 applyFilters();
             });
         }
-        
-        // Reset button handler
+
         const resetBtn = document.getElementById('resetBtn');
         if (resetBtn) {
             resetBtn.addEventListener('click', function() {
@@ -69,16 +58,14 @@ function initializePage() {
                 updatePagination();
             });
         }
-        
-        // Refresh button handler
+
         const refreshBtn = document.getElementById('refreshBtn');
         if (refreshBtn) {
             refreshBtn.addEventListener('click', function() {
                 loadReservations();
             });
         }
-        
-        // Pagination handlers
+
         const prevPage = document.getElementById('prevPage');
         if (prevPage) {
             prevPage.addEventListener('click', function() {
@@ -89,7 +76,7 @@ function initializePage() {
                 }
             });
         }
-        
+
         const nextPage = document.getElementById('nextPage');
         if (nextPage) {
             nextPage.addEventListener('click', function() {
@@ -101,15 +88,14 @@ function initializePage() {
                 }
             });
         }
-        
-        // Modal close handlers
+
         const closeModal = document.getElementById('closeModal');
         if (closeModal) {
             closeModal.addEventListener('click', function() {
                 document.getElementById('detailsModal').style.display = 'none';
             });
         }
-        
+
         const cancelDelete = document.getElementById('cancelDelete');
         if (cancelDelete) {
             cancelDelete.addEventListener('click', function() {
@@ -117,7 +103,7 @@ function initializePage() {
                 reservationToDelete = null;
             });
         }
-        
+
         const confirmDelete = document.getElementById('confirmDelete');
         if (confirmDelete) {
             confirmDelete.addEventListener('click', function() {
@@ -126,8 +112,7 @@ function initializePage() {
                 }
             });
         }
-        
-        // Click outside modal to close
+
         window.addEventListener('click', function(event) {
             const detailsModal = document.getElementById('detailsModal');
             const deleteModal = document.getElementById('deleteModal');
@@ -139,28 +124,25 @@ function initializePage() {
                 reservationToDelete = null;
             }
         });
-        
+
         console.log('All event listeners attached successfully');
     } catch (error) {
         console.error('Error setting up event listeners:', error);
     }
 }
 
-/**
- * Load all reservations from the API
- */
 async function loadReservations() {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const tbody = document.getElementById('reservationsTableBody');
-    
+
     try {
         console.log('=== Loading Reservations ===');
         if (loadingSpinner) loadingSpinner.style.display = 'block';
         if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="no-data">Loading...</td></tr>';
-        
+
         const fetchUrl = '../api/reservations';
         console.log('Fetching from:', fetchUrl);
-        
+
         const response = await fetch(fetchUrl, {
             method: 'GET',
             credentials: 'include',
@@ -168,24 +150,24 @@ async function loadReservations() {
                 'Accept': 'application/json'
             }
         });
-        
+
         console.log('Response status:', response.status);
-        
+
         if (response.status === 401) {
             console.log('Unauthorized - redirecting to login');
             window.location.href = 'login.html';
             return;
         }
-        
+
         if (!response.ok) {
             const errorText = await response.text();
             console.error('API error response:', errorText);
             throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
         }
-        
+
         const responseText = await response.text();
         console.log('Raw API response:', responseText);
-        
+
         let data;
         try {
             data = JSON.parse(responseText);
@@ -193,116 +175,105 @@ async function loadReservations() {
             console.error('JSON parse error:', parseError);
             throw new Error('Invalid JSON response from server');
         }
-        
+
         console.log('Parsed data:', data);
-        
-        // Extract reservations array from response
+
         let reservations = [];
         if (data.reservations && Array.isArray(data.reservations)) {
             reservations = data.reservations;
         } else if (Array.isArray(data)) {
             reservations = data;
         }
-        
+
         console.log('Reservations count:', reservations.length);
-        
+
         allReservations = reservations;
         filteredReservations = [...reservations];
         currentPage = 1;
-        
+
         renderTable();
         updatePagination();
         updateTotalCount();
-        
+
         console.log('=== Reservations loaded successfully ===');
-        
+
     } catch (error) {
         console.error('Error loading reservations:', error);
         showError('Failed to load reservations: ' + error.message);
         if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="no-data error-text">Error loading reservations. Please try refreshing.</td></tr>';
-        
+
     } finally {
         if (loadingSpinner) loadingSpinner.style.display = 'none';
     }
 }
 
-/**
- * Apply search filters
- */
 function applyFilters() {
     const reservationNumber = document.getElementById('searchReservationNumber').value.trim().toLowerCase();
     const guestName = document.getElementById('searchGuestName').value.trim().toLowerCase();
     const roomId = document.getElementById('searchRoomId').value.trim();
     const checkInDate = document.getElementById('searchCheckInDate').value;
     const checkOutDate = document.getElementById('searchCheckOutDate').value;
-    
+
     filteredReservations = allReservations.filter(reservation => {
         let matches = true;
-        
+
         if (reservationNumber && !reservation.reservationNumber.toLowerCase().includes(reservationNumber)) {
             matches = false;
         }
-        
+
         if (guestName && !reservation.guestName.toLowerCase().includes(guestName)) {
             matches = false;
         }
-        
+
         if (roomId && reservation.roomId.toString() !== roomId) {
             matches = false;
         }
-        
+
         if (checkInDate && reservation.checkInDate < checkInDate) {
             matches = false;
         }
-        
+
         if (checkOutDate && reservation.checkOutDate > checkOutDate) {
             matches = false;
         }
-        
+
         return matches;
     });
-    
+
     currentPage = 1;
     renderTable();
     updatePagination();
     updateTotalCount();
-    
+
     if (filteredReservations.length === 0) {
         showWarning('No reservations found matching your search criteria.');
     }
 }
 
-/**
- * Render the reservations table
- */
 function renderTable() {
     const tbody = document.getElementById('reservationsTableBody');
-    
+
     if (filteredReservations.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="no-data">No reservations found</td></tr>';
         return;
     }
-    
-    // Calculate pagination
+
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, filteredReservations.length);
     const pageReservations = filteredReservations.slice(startIndex, endIndex);
-    
-    // Render rows
+
     tbody.innerHTML = pageReservations.map(reservation => {
         const checkInDate = new Date(reservation.checkInDate);
         const checkOutDate = new Date(reservation.checkOutDate);
         const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-        
-        // Build action buttons based on role
+
         let actionButtons = `<button onclick="viewDetails(${reservation.id})" class="btn-icon" title="View Details">👁️</button>`;
         actionButtons += `<button onclick="viewInvoice(${reservation.id})" class="btn-icon" title="View Invoice" data-permission="canPrintInvoice">🧾</button>`;
-        
-        // Only Admin and Manager can delete/cancel reservations
+
         if (userRole && hasPermission(userRole, 'canDeleteReservations')) {
             actionButtons += `<button onclick="confirmDelete(${reservation.id})" class="btn-icon btn-danger" title="Delete">🗑️</button>`;
         }
-        
+
         return `
             <tr>
                 <td><strong>${reservation.reservationNumber || 'N/A'}</strong></td>
@@ -326,69 +297,59 @@ function renderTable() {
             </tr>
         `;
     }).join('');
-    
-    // Apply RBAC to action buttons
+
     if (userRole) {
         applyRoleBasedUI(userRole);
     }
 }
 
-/**
- * Update pagination controls
- */
 function updatePagination() {
     const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
     const paginationControls = document.getElementById('paginationControls');
     const prevBtn = document.getElementById('prevPage');
     const nextBtn = document.getElementById('nextPage');
     const pageInfo = document.getElementById('pageInfo');
-    
+
     if (totalPages <= 1) {
         paginationControls.style.display = 'none';
         return;
     }
-    
+
     paginationControls.style.display = 'flex';
     pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-    
+
     prevBtn.disabled = currentPage === 1;
     nextBtn.disabled = currentPage === totalPages;
 }
 
-/**
- * Update total count badge
- */
 function updateTotalCount() {
     const totalCount = document.getElementById('totalCount');
     totalCount.textContent = `${filteredReservations.length} reservation${filteredReservations.length !== 1 ? 's' : ''}`;
 }
 
-/**
- * View reservation details in modal
- */
 async function viewDetails(reservationId) {
     const modal = document.getElementById('detailsModal');
     const detailsContent = document.getElementById('reservationDetails');
-    
+
     try {
         detailsContent.innerHTML = '<p>Loading details...</p>';
         modal.style.display = 'block';
-        
+
         const response = await fetch(`../api/reservations/${reservationId}`, {
             method: 'GET',
             credentials: 'include'
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const reservation = await response.json();
-        
+
         const checkInDate = new Date(reservation.checkInDate);
         const checkOutDate = new Date(reservation.checkOutDate);
         const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-        
+
         detailsContent.innerHTML = `
             <div class="details-grid">
                 <div class="detail-item">
@@ -441,55 +402,48 @@ async function viewDetails(reservationId) {
                 <button onclick="document.getElementById('detailsModal').style.display='none'" class="btn-secondary">Close</button>
             </div>
         `;
-        
+
     } catch (error) {
         console.error('Error loading reservation details:', error);
         detailsContent.innerHTML = '<p class="error-text">Failed to load reservation details.</p>';
     }
 }
 
-/**
- * Confirm delete reservation
- */
 function confirmDelete(reservationId) {
     reservationToDelete = reservationId;
     document.getElementById('deleteModal').style.display = 'block';
 }
 
-/**
- * Delete reservation
- */
 async function deleteReservation(reservationId) {
     const deleteModal = document.getElementById('deleteModal');
-    
+
     try {
         const response = await fetch(`../api/reservations/${reservationId}`, {
             method: 'DELETE',
             credentials: 'include'
         });
-        
+
         if (response.status === 401) {
             window.location.href = '../index.html';
             return;
         }
-        
+
         if (response.status === 403) {
             showError('You do not have permission to delete reservations.');
             deleteModal.style.display = 'none';
             return;
         }
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         showSuccess('Reservation deleted successfully!');
         deleteModal.style.display = 'none';
         reservationToDelete = null;
-        
-        // Reload reservations
+
         loadReservations();
-        
+
     } catch (error) {
         console.error('Error deleting reservation:', error);
         showError('Failed to delete reservation. Please try again.');
@@ -497,43 +451,31 @@ async function deleteReservation(reservationId) {
     }
 }
 
-/**
- * View invoice for reservation
- */
 function viewInvoice(reservationId) {
     window.location.href = `invoice.html?id=${reservationId}`;
 }
 
-/**
- * Format date to readable string
- */
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
     });
 }
 
-/**
- * Show success message
- */
 function showSuccess(message) {
     const messageArea = document.getElementById('messageArea');
     messageArea.className = 'message-area success';
     messageArea.textContent = message;
     messageArea.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     setTimeout(() => {
         messageArea.style.display = 'none';
     }, 5000);
 }
 
-/**
- * Show error message
- */
 function showError(message) {
     const messageArea = document.getElementById('messageArea');
     messageArea.className = 'message-area error';
@@ -542,27 +484,21 @@ function showError(message) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/**
- * Show warning message
- */
 function showWarning(message) {
     const messageArea = document.getElementById('messageArea');
     messageArea.className = 'message-area warning';
     messageArea.textContent = message;
     messageArea.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     setTimeout(() => {
         messageArea.style.display = 'none';
     }, 5000);
 }
 
-/**
- * Logout handler
- */
 function logout(event) {
     event.preventDefault();
-    
+
     fetch('../api/logout', {
         method: 'POST',
         credentials: 'include'

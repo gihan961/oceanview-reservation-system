@@ -1,27 +1,25 @@
-// Dashboard Page JavaScript
 let currentAuth = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Initialize authentication and role-based access
+
     currentAuth = await initializePageAuth();
     if (!currentAuth) return;
-    
-    // Load dashboard data
+
     await loadDashboardData();
 });
 
 async function loadDashboardData() {
     try {
         const response = await fetch('../api/dashboard', { credentials: 'include' });
-        
+
         if (response.status === 401) {
             window.location.href = 'login.html';
             return;
         }
-        
+
         const data = await response.json();
         console.log('Dashboard API response:', data);
-        
+
         if (data.success) {
             updateStats(data.stats);
             updateRecentReservations(data.recentCheckIns);
@@ -37,14 +35,12 @@ async function loadDashboardData() {
 
 function updateStats(stats) {
     if (!stats) return;
-    
-    // Update stat cards
+
     document.getElementById('totalReservations').textContent = stats.totalReservations || 0;
     document.getElementById('activeReservations').textContent = stats.activeReservations || 0;
     document.getElementById('totalRevenue').textContent = formatCurrency(stats.totalRevenue || 0);
-    
-    // Calculate and display occupancy rate
-    const occupancyRate = stats.totalRooms > 0 
+
+    const occupancyRate = stats.totalRooms > 0
         ? ((stats.occupiedRooms / stats.totalRooms) * 100).toFixed(1)
         : 0;
     document.getElementById('occupancyRate').textContent = occupancyRate + '%';
@@ -52,21 +48,21 @@ function updateStats(stats) {
 
 function updateRecentReservations(reservations) {
     const tbody = document.querySelector('#recentReservations tbody');
-    
+
     if (!reservations || reservations.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="no-data">No recent reservations</td></tr>';
         return;
     }
-    
+
     const role = currentAuth ? currentAuth.role : null;
-    
+
     tbody.innerHTML = reservations.map(reservation => {
-        // Build action buttons based on role
+
         let actionBtns = `<button class="btn-sm" onclick="viewReservation(${reservation.reservationId})">View</button>`;
         if (!role || hasPermission(role, 'canPrintInvoice')) {
             actionBtns += ` <button class="btn-sm" onclick="printInvoice(${reservation.reservationId})">Invoice</button>`;
         }
-        
+
         return `
         <tr>
             <td>${escapeHtml(reservation.reservationNumber || String(reservation.reservationId))}</td>
@@ -131,6 +127,6 @@ function showError(message) {
     errorDiv.className = 'alert alert-error';
     errorDiv.textContent = message;
     mainContent.insertBefore(errorDiv, mainContent.firstChild);
-    
+
     setTimeout(() => errorDiv.remove(), 5000);
 }
