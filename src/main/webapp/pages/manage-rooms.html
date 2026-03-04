@@ -127,22 +127,25 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <header class="header">
-            <div class="logo">🌊 OceanView</div>
+                <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="white" stroke-width="2.5"/><path d="M8 18 Q12 13, 16 18 T24 18" stroke="white" stroke-width="2" fill="none"/><path d="M10 22 Q13 18, 16 22 T22 22" stroke="white" stroke-width="1.5" fill="none"/></svg>
+                <span>OceanView</span>
+            </div>
             <nav class="nav">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="add-reservation.html" data-permission="canAddReservations">New Reservation</a>
-                <a href="view-reservation.html" data-permission="canViewReservations">View Reservations</a>
-                <a href="available-rooms.html" data-permission="canViewRooms">Available Rooms</a>
-                <a href="manage-rooms.html" class="active" data-permission="canManageRooms">Manage Rooms</a>
-                <a href="report.html" data-permission="canViewReports">Reports</a>
-                <a href="create-account.html" data-permission="canManageAccounts">Create Account</a>
-                <a href="help.html">Help</a>
+                <a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></a>
+                <a href="add-reservation.html" data-permission="canAddReservations"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>New Reservation</span></a>
+                <a href="view-reservation.html" data-permission="canViewReservations"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>View Reservations</span></a>
+                <a href="available-rooms.html" data-permission="canViewRooms"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Available Rooms</span></a>
+                <a href="manage-rooms.html" class="active" data-permission="canManageRooms"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Manage Rooms</span></a>
+                <a href="report.html" data-permission="canViewReports"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></a>
+                <a href="create-account.html" data-permission="canManageAccounts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg><span>Create Account</span></a>
+                <a href="help.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Help</span></a>
             </nav>
             <div class="user-menu">
-                <span id="username">User</span>
-                <span id="userRole" class="role-badge">ROLE</span>
-                <a href="#" class="logout" onclick="logout(); return false;">Logout</a>
+                <span id="username">Loading...</span>
+                <span id="userRole" class="role-badge">Loading...</span>
+                <a href="../index.html" class="logout" onclick="logout(event)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</a>
             </div>
         </header>
 
@@ -152,10 +155,8 @@
                 <button class="btn-add-room" id="btnAddRoom" onclick="openAddModal()">+ Add New Room</button>
             </div>
 
-            <!-- Alert area -->
             <div id="alertArea"></div>
 
-            <!-- Stats -->
             <div class="room-stats">
                 <div class="room-stat-card">
                     <h3>Total Rooms</h3>
@@ -175,7 +176,6 @@
                 </div>
             </div>
 
-            <!-- Room Table -->
             <div class="dashboard-section">
                 <table class="rooms-table" id="roomsTable">
                     <thead>
@@ -199,7 +199,6 @@
         </footer>
     </div>
 
-    <!-- Add / Edit Room Modal -->
     <div class="modal" id="roomModal">
         <div class="modal-content modal-small">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -242,7 +241,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirm Modal -->
     <div class="modal" id="deleteModal">
         <div class="modal-content modal-small">
             <span class="close" onclick="closeDeleteModal()">&times;</span>

@@ -11,56 +11,56 @@
         /* Print Styles */
         @media print {
             /* Hide navigation and buttons */
-            .header, .nav, .user-menu, .logout, 
+            .header, .nav, .user-menu, .logout,
             .no-print, .btn-primary, .btn-secondary {
                 display: none !important;
             }
-            
+
             /* Full page layout for print */
             body {
                 margin: 0;
                 padding: 0;
                 background: white;
             }
-            
+
             .dashboard-container {
                 display: block;
             }
-            
+
             .main-content {
                 margin: 0;
                 padding: 20px;
                 max-width: 100%;
             }
-            
+
             .invoice-container {
                 box-shadow: none;
                 border: 1px solid #000;
                 page-break-after: avoid;
             }
-            
+
             /* A4 page size */
             @page {
                 size: A4;
                 margin: 1cm;
             }
-            
+
             /* Prevent page breaks inside elements */
             .invoice-section, .invoice-table {
                 page-break-inside: avoid;
             }
-            
+
             /* Print-friendly colors */
             .invoice-header {
                 background-color: #f0f0f0 !important;
                 color: #000 !important;
             }
-            
+
             .invoice-table th {
                 background-color: #e0e0e0 !important;
                 color: #000 !important;
             }
-            
+
             /* Clear float for print */
             .invoice-footer::after {
                 content: "";
