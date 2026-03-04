@@ -18,9 +18,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Handles user registration (Admin only)
- */
 @WebServlet("/api/register")
 public class RegisterServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RegisterServlet.class.getName());
@@ -28,13 +25,12 @@ public class RegisterServlet extends HttpServlet {
     private final AuthService authService = new AuthService();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Only Admin can create/manage user accounts
         if (!RBACUtil.requireAuthAndRole(request, response, RBACUtil.ROLE_ADMIN)) {
             return;
         }
@@ -42,14 +38,13 @@ public class RegisterServlet extends HttpServlet {
         Map<String, Object> jsonResponse = new HashMap<>();
 
         try {
-            // Get form parameters
+
             String fullName = request.getParameter("fullName");
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
             String role = request.getParameter("role");
 
-            // Validate parameters
             if (fullName == null || fullName.trim().isEmpty()) {
                 throw new ValidationException("Full name is required");
             }
@@ -70,7 +65,6 @@ public class RegisterServlet extends HttpServlet {
                 throw new ValidationException("Role is required");
             }
 
-            // Validate role is not ADMIN
             if ("ADMIN".equalsIgnoreCase(role.trim())) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 jsonResponse.put("success", false);
@@ -79,13 +73,11 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            // Validate role is MANAGER or STAFF
             String normalizedRole = role.trim().toUpperCase();
             if (!normalizedRole.equals("MANAGER") && !normalizedRole.equals("STAFF")) {
                 throw new ValidationException("Invalid role. Must be MANAGER or STAFF");
             }
 
-            // Additional validations
             if (username.trim().length() < 3) {
                 throw new ValidationException("Username must be at least 3 characters long");
             }
@@ -98,15 +90,13 @@ public class RegisterServlet extends HttpServlet {
                 throw new ValidationException("Full name must be at least 2 characters long");
             }
 
-            // Attempt to register user
             User newUser = authService.registerUser(
-                username.trim(), 
-                password, 
-                normalizedRole, 
+                username.trim(),
+                password,
+                normalizedRole,
                 fullName.trim()
             );
 
-            // Success response
             response.setStatus(HttpServletResponse.SC_CREATED);
             jsonResponse.put("success", true);
             jsonResponse.put("message", "Registration successful! You can now login with your credentials.");
@@ -134,12 +124,11 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Only Admin can view user list
         if (!RBACUtil.requireAuthAndRole(request, response, RBACUtil.ROLE_ADMIN)) {
             return;
         }

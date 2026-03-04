@@ -26,37 +26,36 @@ import java.util.logging.Logger;
 
 @WebServlet(name = "RoomServlet", urlPatterns = {"/api/rooms", "/api/rooms/*"})
 public class RoomServlet extends HttpServlet {
-    
+
     private static final Logger LOGGER = Logger.getLogger(RoomServlet.class.getName());
     private RoomService roomService;
-    
+
     @Override
     public void init() throws ServletException {
         super.init();
         roomService = ServiceFactory.getInstance().getRoomService();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        // Check authentication
+
         if (!RBACUtil.requireAuth(request, response)) {
             return;
         }
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
             String pathInfo = request.getPathInfo();
-            
+
             if (pathInfo != null && pathInfo.length() > 1) {
                 int roomId = Integer.parseInt(pathInfo.substring(1));
                 Room room = roomService.getRoomById(roomId);
-                
+
                 if (room != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
                     out.print(roomToJson(room));
@@ -69,9 +68,9 @@ public class RoomServlet extends HttpServlet {
                 String roomType = request.getParameter("type");
                 String checkInStr = request.getParameter("checkIn");
                 String checkOutStr = request.getParameter("checkOut");
-                
+
                 List<Room> rooms;
-                
+
                 if (checkInStr != null && checkOutStr != null) {
                     rooms = getDynamicallyAvailableRooms();
                 } else if ("AVAILABLE".equalsIgnoreCase(status)) {
@@ -83,11 +82,11 @@ public class RoomServlet extends HttpServlet {
                 } else {
                     rooms = roomService.getAllRooms();
                 }
-                
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 out.print(roomsToJson(rooms));
             }
-            
+
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"success\": false, \"message\": \"Invalid room ID\"}");
@@ -102,49 +101,47 @@ public class RoomServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        // Admin or Manager only
+
         if (!RBACUtil.requireAuthAndRole(request, response,
                 RBACUtil.ROLE_ADMIN, RBACUtil.ROLE_MANAGER)) {
             return;
         }
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
             String roomType = request.getParameter("roomType");
             BigDecimal pricePerNight = new BigDecimal(request.getParameter("pricePerNight"));
             String status = request.getParameter("status");
-            
+
             if (status == null || status.trim().isEmpty()) {
                 status = Room.STATUS_AVAILABLE;
             }
-            
-            // Create room
+
             Room createdRoom = roomService.createRoom(roomType, pricePerNight, status);
-            
+
             response.setStatus(HttpServletResponse.SC_CREATED);
             out.print("{");
             out.print("\"success\": true,");
             out.print("\"message\": \"Room created successfully\",");
             out.print("\"room\": " + roomToJson(createdRoom));
             out.print("}");
-            
+
         } catch (ValidationException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"success\": false, \"message\": \"" + escapeJson(e.getMessage()) + "\"}");
-            
+
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"success\": false, \"message\": \"Invalid input parameters\"}");
-            
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error creating room", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -153,22 +150,21 @@ public class RoomServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        // Admin or Manager only
+
         if (!RBACUtil.requireAuthAndRole(request, response,
                 RBACUtil.ROLE_ADMIN, RBACUtil.ROLE_MANAGER)) {
             return;
         }
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
             String pathInfo = request.getPathInfo();
             if (pathInfo == null || pathInfo.length() <= 1) {
@@ -176,10 +172,9 @@ public class RoomServlet extends HttpServlet {
                 out.print("{\"success\": false, \"message\": \"Room ID required\"}");
                 return;
             }
-            
+
             int roomId = Integer.parseInt(pathInfo.substring(1));
-            
-            // Get existing room
+
             Room room = roomService.getRoomById(roomId);
             if (room == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -187,20 +182,19 @@ public class RoomServlet extends HttpServlet {
                 return;
             }
 
-            // Update fields if provided
             String roomType = request.getParameter("roomType");
             if (roomType != null) room.setRoomType(roomType);
-            
+
             String priceStr = request.getParameter("pricePerNight");
             if (priceStr != null) {
                 room.setPricePerNight(new BigDecimal(priceStr));
             }
-            
+
             String status = request.getParameter("status");
             if (status != null) room.setStatus(status);
-            // Update room
+
             boolean updated = roomService.updateRoom(room);
-            
+
             if (updated) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 out.print("{\"success\": true, \"message\": \"Room updated successfully\"}");
@@ -208,7 +202,7 @@ public class RoomServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 out.print("{\"success\": false, \"message\": \"Failed to update room\"}");
             }
-            
+
         } catch (ValidationException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"success\": false, \"message\": \"" + escapeJson(e.getMessage()) + "\"}");
@@ -220,22 +214,21 @@ public class RoomServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        // Admin or Manager only
+
         if (!RBACUtil.requireAuthAndRole(request, response,
                 RBACUtil.ROLE_ADMIN, RBACUtil.ROLE_MANAGER)) {
             return;
         }
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
             String pathInfo = request.getPathInfo();
             if (pathInfo == null || pathInfo.length() <= 1) {
@@ -243,10 +236,10 @@ public class RoomServlet extends HttpServlet {
                 out.print("{\"success\": false, \"message\": \"Room ID required\"}");
                 return;
             }
-            
+
             int roomId = Integer.parseInt(pathInfo.substring(1));
             boolean deleted = roomService.deleteRoom(roomId);
-            
+
             if (deleted) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 out.print("{\"success\": true, \"message\": \"Room deleted successfully\"}");
@@ -254,7 +247,7 @@ public class RoomServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 out.print("{\"success\": false, \"message\": \"Room not found\"}");
             }
-            
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error deleting room", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -263,10 +256,7 @@ public class RoomServlet extends HttpServlet {
             out.flush();
         }
     }
-    
-    /**
-     * Get rooms with no active reservation where today falls between check-in and check-out.
-     */
+
     private List<Room> getDynamicallyAvailableRooms() throws Exception {
         String sql =
             "SELECT r.id, r.room_type, r.price_per_night, r.status " +
@@ -277,17 +267,17 @@ public class RoomServlet extends HttpServlet {
             "      AND CURDATE() < DATE(res.check_out_date) " +
             ") " +
             "ORDER BY r.room_type, r.id";
-        
+
         List<Room> rooms = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = DBConnection.getInstance().getConnection();
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
-            
+
             while (rs.next()) {
                 Room room = new Room(
                     rs.getInt("id"),
@@ -297,16 +287,16 @@ public class RoomServlet extends HttpServlet {
                 );
                 rooms.add(room);
             }
-            
+
             return rooms;
-            
+
         } finally {
             try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
             try { if (pstmt != null) pstmt.close(); } catch (SQLException ignored) {}
             try { if (conn != null) conn.close(); } catch (SQLException ignored) {}
         }
     }
-    
+
     private String roomToJson(Room r) {
         StringBuilder json = new StringBuilder();
         json.append("{");
@@ -317,20 +307,20 @@ public class RoomServlet extends HttpServlet {
         json.append("}");
         return json.toString();
     }
-    
+
     private String roomsToJson(List<Room> rooms) {
         StringBuilder json = new StringBuilder();
         json.append("{\"success\": true, \"rooms\": [");
-        
+
         for (int i = 0; i < rooms.size(); i++) {
             if (i > 0) json.append(",");
             json.append(roomToJson(rooms.get(i)));
         }
-        
+
         json.append("], \"count\": ").append(rooms.size()).append("}");
         return json.toString();
     }
-    
+
     private String escapeJson(String value) {
         if (value == null) return "";
         return value.replace("\\", "\\\\")

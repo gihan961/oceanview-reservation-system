@@ -23,11 +23,11 @@ import java.util.logging.Logger;
 
 @WebServlet(name = "DashboardServlet", urlPatterns = {"/api/dashboard"})
 public class DashboardServlet extends HttpServlet {
-    
+
     private static final Logger LOGGER = Logger.getLogger(DashboardServlet.class.getName());
     private ReservationService reservationService;
     private RoomService roomService;
-    
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -35,20 +35,20 @@ public class DashboardServlet extends HttpServlet {
         reservationService = factory.getReservationService();
         roomService = factory.getRoomService();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         if (!RBACUtil.requireAuth(request, response)) {
             return;
         }
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
             List<Room> allRooms = roomService.getAllRooms();
             int totalRooms = allRooms.size();
@@ -61,12 +61,12 @@ public class DashboardServlet extends HttpServlet {
 
             List<Reservation> allReservations = reservationService.getAllReservations();
             int totalReservations = allReservations.size();
-            
+
             LocalDate today = LocalDate.now();
             Date todaySql = Date.valueOf(today);
             int activeReservations = 0;
             BigDecimal totalRevenue = BigDecimal.ZERO;
-            
+
             for (Reservation res : allReservations) {
                 if (!res.getCheckInDate().after(todaySql) && !res.getCheckOutDate().before(todaySql)) {
                     activeReservations++;
@@ -75,12 +75,11 @@ public class DashboardServlet extends HttpServlet {
                     totalRevenue = totalRevenue.add(res.getTotalAmount());
                 }
             }
-            
+
             StringBuilder json = new StringBuilder();
             json.append("{");
             json.append("\"success\": true,");
-            
-            // Stats object
+
             json.append("\"stats\": {");
             json.append("\"totalReservations\": ").append(totalReservations).append(",");
             json.append("\"activeReservations\": ").append(activeReservations).append(",");
@@ -88,14 +87,13 @@ public class DashboardServlet extends HttpServlet {
             json.append("\"totalRooms\": ").append(totalRooms).append(",");
             json.append("\"occupiedRooms\": ").append(occupiedRooms);
             json.append("},");
-            
-            // Recent reservations (last 10)
+
             json.append("\"recentCheckIns\": [");
             int limit = Math.min(10, allReservations.size());
             for (int i = 0; i < limit; i++) {
                 if (i > 0) json.append(",");
                 Reservation res = allReservations.get(i);
-                // Determine status based on dates
+
                 String status;
                 if (res.getCheckOutDate().before(todaySql)) {
                     status = "Checked-Out";
@@ -104,7 +102,7 @@ public class DashboardServlet extends HttpServlet {
                 } else {
                     status = "Confirmed";
                 }
-                
+
                 json.append("{");
                 json.append("\"reservationId\": ").append(res.getId()).append(",");
                 json.append("\"reservationNumber\": \"").append(escapeJson(res.getReservationNumber())).append("\",");
@@ -118,12 +116,12 @@ public class DashboardServlet extends HttpServlet {
                 json.append("}");
             }
             json.append("]");
-            
+
             json.append("}");
-            
+
             response.setStatus(HttpServletResponse.SC_OK);
             out.print(json.toString());
-            
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error retrieving dashboard data", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -132,13 +130,13 @@ public class DashboardServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }
-    
+
     private String escapeJson(String value) {
         if (value == null) return "";
         return value.replace("\\", "\\\\")

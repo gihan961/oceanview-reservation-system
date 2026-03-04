@@ -19,30 +19,30 @@ import java.util.logging.Logger;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/api/login"})
 public class LoginServlet extends HttpServlet {
-    
+
     private static final Logger LOGGER = LoggerUtil.getLogger(LoginServlet.class);
     private AuthService authService;
-    
+
     @Override
     public void init() throws ServletException {
         super.init();
         authService = ServiceFactory.getInstance().getAuthService();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(false);
-        
+
         try {
             if (session != null && session.getAttribute("user") != null) {
                 User user = (User) session.getAttribute("user");
-                
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 out.print("{");
                 out.print("\"success\": true,");
@@ -71,25 +71,24 @@ public class LoginServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         PrintWriter out = response.getWriter();
-        
+
         try {
-            // Get credentials
+
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            
-            // Validate input
+
             if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
-                
+
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.print("{");
                 out.print("\"success\": false,");
@@ -97,21 +96,18 @@ public class LoginServlet extends HttpServlet {
                 out.print("}");
                 return;
             }
-            
-            // Authenticate user
+
             User user = authService.login(username.trim(), password);
             String ipAddress = getClientIpAddress(request);
             LoggerUtil.logLoginSuccess(username, ipAddress);
-            
-            // Create session
+
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
             session.setMaxInactiveInterval(30 * 60);
-            
-            // Send success response
+
             response.setStatus(HttpServletResponse.SC_OK);
             out.print("{");
             out.print("\"success\": true,");
@@ -122,23 +118,23 @@ public class LoginServlet extends HttpServlet {
             out.print("\"role\": \"" + escapeJson(user.getRole()) + "\"");
             out.print("}");
             out.print("}");
-            
+
         } catch (AuthenticationException e) {
             String ipAddress = getClientIpAddress(request);
             String username = request.getParameter("username");
             LoggerUtil.logLoginFailure(username, ipAddress, e.getMessage());
-            
+
             LOGGER.log(Level.WARNING, "Authentication failed: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             out.print("{");
             out.print("\"success\": false,");
             out.print("\"message\": \"" + escapeJson(e.getMessage()) + "\"");
             out.print("}");
-            
+
         } catch (Exception e) {
             String username = request.getParameter("username");
             LoggerUtil.logAuthenticationError(username, e);
-            
+
             LOGGER.log(Level.SEVERE, "Error during login", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             out.print("{");
@@ -149,7 +145,7 @@ public class LoginServlet extends HttpServlet {
             out.flush();
         }
     }
-    
+
     private String getClientIpAddress(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isEmpty()) {
@@ -160,7 +156,7 @@ public class LoginServlet extends HttpServlet {
         }
         return ipAddress;
     }
-    
+
     private String escapeJson(String value) {
         if (value == null) return "";
         return value.replace("\\", "\\\\")
